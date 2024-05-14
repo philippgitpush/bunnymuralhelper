@@ -24,7 +24,7 @@
             padding: 6px;
           }
 
-          padding: 14px
+          padding: 10px
         }
         .outer { opacity: 1 }
       }
@@ -72,13 +72,22 @@
 }
 
 .piece {
+  transition: padding 0.2s;
   justify-content: center;
   align-items: center;
   user-select: none;
   aspect-ratio: 1;
   display: flex;
   position: relative;
+  cursor: grab;
 
+  @media (min-width: 768px) {
+    &:hover {
+      border: 2px solid white;
+      padding: 3px;
+    }
+  }
+  
   .inner {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(4, 1fr);

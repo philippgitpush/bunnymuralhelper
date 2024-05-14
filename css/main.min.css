@@ -75,7 +75,7 @@ body {
   aspect-ratio: 1;
 }
 #puzzle .slot .piece:hover .inner {
-  padding: 14px;
+  padding: 10px;
 }
 @media (max-width: 767px) {
   #puzzle .slot .piece:hover .inner {
@@ -127,6 +127,7 @@ body {
 }
 
 .piece {
+  transition: padding 0.2s;
   justify-content: center;
   align-items: center;
   -webkit-user-select: none;
@@ -135,6 +136,13 @@ body {
   aspect-ratio: 1;
   display: flex;
   position: relative;
+  cursor: grab;
+}
+@media (min-width: 768px) {
+  .piece:hover {
+    border: 2px solid white;
+    padding: 3px;
+  }
 }
 .piece .inner {
   grid-template-columns: repeat(4, 1fr);
