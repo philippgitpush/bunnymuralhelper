@@ -1,0 +1,236 @@
+body, html {
+  margin: 0;
+}
+
+body {
+  background-image: url("../assets/animal-well.webp");
+  background-color: black;
+  background-size: cover;
+  font-family: Tahoma, sans-serif;
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  max-width: 1200px;
+  padding: 0 20px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.wrapper .content {
+  align-items: center;
+  display: flex;
+  flex: 1;
+}
+.wrapper .footer {
+  background-color: black;
+  text-align: center;
+  padding: 20px 0;
+  flex: 0;
+}
+.wrapper .footer a, .wrapper .footer a:hover {
+  color: #fff;
+}
+
+#fireflies {
+  pointer-events: none;
+  position: absolute;
+  filter: blur(1px);
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+}
+
+#puzzle {
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  background-color: rgba(40, 79, 136, 0.7490196078);
+  border: 2px solid #31548e;
+  margin-top: 40px;
+  padding: 10px;
+  display: grid;
+  gap: 6px;
+}
+@media (max-width: 991px) {
+  #puzzle {
+    gap: 4px;
+  }
+}
+#puzzle .slot {
+  background-color: rgba(255, 255, 255, 0.1);
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  aspect-ratio: 1;
+}
+#puzzle .slot .piece:hover .inner {
+  padding: 14px;
+}
+@media (max-width: 767px) {
+  #puzzle .slot .piece:hover .inner {
+    padding: 6px;
+  }
+}
+#puzzle .slot .piece:hover .outer {
+  opacity: 1;
+}
+
+#pieces {
+  grid-template-columns: repeat(17, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  background-color: rgba(46, 51, 57, 0.75);
+  border: 2px solid #3c4046;
+  margin-bottom: 40px;
+  margin-top: 40px;
+  padding: 10px;
+  display: grid;
+  gap: 4px;
+}
+@media (max-width: 991px) {
+  #pieces {
+    grid-template-columns: repeat(13, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+  }
+}
+@media (max-width: 767px) {
+  #pieces {
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+  }
+}
+#pieces .slot {
+  background-color: rgba(255, 255, 255, 0.1);
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  aspect-ratio: 1;
+  padding: 4px;
+}
+#pieces .piece .inner {
+  gap: 4px;
+}
+@media (max-width: 991px) {
+  #pieces .piece .inner {
+    gap: 2px;
+  }
+}
+
+.piece {
+  justify-content: center;
+  align-items: center;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  aspect-ratio: 1;
+  display: flex;
+  position: relative;
+}
+.piece .inner {
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  transition: padding 0.2s ease-in-out;
+  display: grid;
+  height: 100%;
+  width: 100%;
+  gap: 6px;
+}
+@media (max-width: 991px) {
+  .piece .inner {
+    gap: 4px;
+  }
+}
+.piece .outer {
+  transition: opacity 0.2s ease-in-out;
+  position: absolute;
+  display: flex;
+  height: calc(100% - 8px);
+  width: calc(100% - 8px);
+  opacity: 0;
+  left: 4px;
+  top: 4px;
+}
+@media (max-width: 767px) {
+  .piece .outer {
+    top: -10px;
+    left: -10px;
+    width: calc(100% + 20px);
+    height: calc(100% + 20px);
+  }
+}
+.piece .outer .top {
+  position: absolute;
+  height: auto;
+  width: 100%;
+  left: 0;
+  top: 0;
+}
+.piece .outer .right {
+  flex-direction: column;
+  position: absolute;
+  height: 100%;
+  width: auto;
+  right: 0;
+  top: 0;
+}
+.piece .outer .bottom {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  height: auto;
+  left: 0;
+}
+.piece .outer .left {
+  flex-direction: column;
+  position: absolute;
+  height: 100%;
+  width: auto;
+  left: 0;
+  top: 0;
+}
+.piece .outer div {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
+@media (max-width: 991px) {
+  .piece .outer div {
+    gap: 4px;
+  }
+}
+.piece .outer div .pixel {
+  background-color: white;
+  height: 5px;
+  width: 5px;
+}
+.piece .pixel {
+  background-color: #061660;
+  aspect-ratio: 1;
+}
+.piece .pixel.red {
+  background-color: #e64e79;
+}
+.piece .pixel.blue {
+  background-color: #56c8ff;
+}
+.piece .pixel.white {
+  background-color: #fff1df;
+}
+
+body.dragging .piece {
+  pointer-events: none;
+}
+body.dragging #puzzle > .slot:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}/*# sourceMappingURL=main.min.css.map */
