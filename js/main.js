@@ -3,52 +3,70 @@ const pieces = document.querySelectorAll('.piece');
 const slots = document.querySelectorAll('.slot');
 const piecesContainer = document.getElementById('pieces');
 
-// drag & drop logic
+// pointer events
 pieces.forEach(piece => {
-  piece.addEventListener('dragstart', dragStart);
-  piece.addEventListener('dragend', dragEnd);
+  piece.addEventListener('pointerdown', pointerDown);
 });
 
-slots.forEach(slot => {
-  slot.addEventListener('dragover', dragOver);
-  slot.addEventListener('drop', dragDrop);
-});
+// mouseup event
+document.addEventListener('mouseup', mouseUp);
 
 let draggedPiece = null;
+let offsetX = 0;
+let offsetY = 0;
+let dummyPiece = null;
 
-function dragStart() {
+function pointerDown(e) {
   draggedPiece = this;
-  document.body.classList.add('dragging');
+  draggedPiece.classList.add('dragging');
+
+  // create a dummy clone of the dragged piece to display as the cursor while dragging
+  dummyPiece = draggedPiece.cloneNode(true);
+  dummyPiece.classList.add('dummy');
+  document.body.appendChild(dummyPiece);
+
+  dummyPiece.style.position = 'fixed';
+  dummyPiece.style.pointerEvents = 'none';
+  updateDummyPiecePosition(e.pageX, e.pageY);
 }
 
-function dragEnd() {
-  draggedPiece = null;
-  document.body.classList.remove('dragging');
-}
+function mouseUp(e) {
+  if (!draggedPiece) return;
 
-function dragOver(e) {
-  e.preventDefault();
-}
-
-function dragDrop(e) {
-  if (!e.target.classList.contains('slot'))  return;
+  const hoveredSlot = document.elementFromPoint(e.clientX, e.clientY).closest('.slot');
   
-  // when the slot is empty, append piece
-  if (this.children.length === 0) {
-    this.appendChild(draggedPiece);
-    playSound(sound_place);
-    return;
+  if (hoveredSlot && hoveredSlot.classList.contains('slot')) {
+    if (hoveredSlot.children.length === 0) {
+      hoveredSlot.appendChild(draggedPiece);
+      playSound(sound_place);
+    } else {
+      const pieceInSlot = hoveredSlot.children[0];
+      const parentOfDraggedPiece = draggedPiece.parentElement;
+      const parentOfPieceInSlot = pieceInSlot.parentElement;
+      
+      parentOfDraggedPiece.insertBefore(pieceInSlot, draggedPiece);
+      parentOfPieceInSlot.appendChild(draggedPiece);
+      playSound(sound_swap);
+    }
   }
-  
-  // when the slot isn't empty, swap pieces
-  const pieceInSlot = this.children[0];
-  const parentOfDraggedPiece = draggedPiece.parentElement;
-  const parentOfPieceInSlot = pieceInSlot.parentElement;
-  
-  parentOfDraggedPiece.insertBefore(pieceInSlot, draggedPiece);
-  parentOfPieceInSlot.appendChild(draggedPiece);
-  playSound(sound_swap);
+
+  if (dummyPiece) document.body.removeChild(dummyPiece);
+
+  draggedPiece.classList.remove('dragging');
+  draggedPiece = null;
 }
+
+function updateDummyPiecePosition(x, y) {
+  dummyPiece.style.top = (y - dummyPiece.offsetHeight / 2) + 'px';
+  dummyPiece.style.left = (x - dummyPiece.offsetHeight / 2) + 'px';
+}
+
+// update the position of the dummy piece while dragging
+document.addEventListener('mousemove', e => {
+  if (dummyPiece) {
+    updateDummyPiecePosition(e.pageX, e.pageY);
+  }
+});
 
 // sounds
 var sound_place = new Audio("assets/50.ogg");

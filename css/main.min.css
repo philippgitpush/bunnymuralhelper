@@ -133,10 +133,23 @@ body {
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
+  position: relative;
   aspect-ratio: 1;
   display: flex;
-  position: relative;
   cursor: grab;
+}
+.piece.dragging {
+  opacity: 0.5;
+}
+.piece.dummy {
+  height: 100px;
+  width: 100px;
+}
+@media (max-width: 768px) {
+  .piece.dummy {
+    height: 50px;
+    width: 50px;
+  }
 }
 @media (min-width: 768px) {
   .piece:hover {

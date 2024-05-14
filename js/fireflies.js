@@ -1,10 +1,10 @@
-// Canvas initialization
+// canvas initialization
 const canvas = document.getElementById("fireflies");
 const ctx = canvas.getContext("2d");
 let w = canvas.width = window.innerWidth;
 let h = canvas.height = window.innerHeight;
 
-// Firefly class definition
+// firefly class definition
 class Firefly {
   constructor() {
     this.x = Math.random() * w;
@@ -28,10 +28,9 @@ class Firefly {
   }
 }
 
-// Array to store fireflies
 const fireflies = [];
 
-// Generate fireflies
+// generate fireflies
 function generateFireflies() {
   if (fireflies.length < 100) {
     for (let j = 0; j < 10; j++) {
@@ -40,42 +39,37 @@ function generateFireflies() {
   }
 }
 
-// Draw function
+// draw function
 function draw() {
   generateFireflies();
 
-  // Animation
   for (let i = 0; i < fireflies.length; i++) {
     fireflies[i].move();
     fireflies[i].show();
 
-    // Remove fireflies that go beyond canvas boundaries
+    // remove fireflies that go beyond canvas boundaries
     if (fireflies[i].x < 0 || fireflies[i].x > w || fireflies[i].y < 0 || fireflies[i].y > h) {
       fireflies.splice(i, 1);
     }
   }
 }
 
-// Initialize canvas
 function initCanvas() {
   ctx.fillStyle = "rgba(30,30,30,1)";
   ctx.fillRect(0, 0, w, h);
 }
 
-// Resize event listener
 window.addEventListener("resize", function() {
   w = canvas.width = window.innerWidth;
   h = canvas.height = window.innerHeight;
   initCanvas();
 });
 
-// Animation loop
 function loop() {
   window.requestAnimationFrame(loop);
   ctx.clearRect(0, 0, w, h);
   draw();
 }
 
-// Start animation
 initCanvas();
 loop();
