@@ -236,9 +236,6 @@ body {
   background-color: #fff1df;
 }
 
-body.dragging .piece {
-  pointer-events: none;
-}
 body.dragging #puzzle > .slot:hover {
   background-color: rgba(255, 255, 255, 0.2) !important;
 }/*# sourceMappingURL=main.min.css.map */
