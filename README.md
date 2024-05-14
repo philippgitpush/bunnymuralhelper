@@ -1,5 +1,7 @@
 # Animal Well: Bunny Mural Puzzle Helper
 
+![a preview screenshot of the puzzle helper's webpage](assets/opengraph/ogimage.jpg)
+
 ## Overview
 
 The [Bunny Mural Puzzle Helper](https://philippgitpush.github.io/bunnymuralhelper/) is a tool designed to assist players in solving the Bunny Mural Puzzle in [Animal Well](https://store.steampowered.com/app/813230/ANIMAL_WELL/). It simplifies the process of piecing together the mural by providing a canvas where everyone can stitch together the final solution.
