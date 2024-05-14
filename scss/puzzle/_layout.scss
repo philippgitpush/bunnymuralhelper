@@ -81,7 +81,7 @@
   display: flex;
   cursor: grab;
 
-  &.dragging {
+  &.dragging:not(.dummy) {
     opacity: 0.5;
   }
 

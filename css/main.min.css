@@ -138,7 +138,7 @@ body {
   display: flex;
   cursor: grab;
 }
-.piece.dragging {
+.piece.dragging:not(.dummy) {
   opacity: 0.5;
 }
 .piece.dummy {
