@@ -1,5 +1,17 @@
 body.dragging {
-  #puzzle>.slot:hover {
-    background-color: rgba(255, 255, 255, 0.2) !important;
+  @media (min-width: 768px) {
+    slot:hover {
+      background-color: rgba(255, 255, 255, 0.3) !important;
+      border: 2px solid white;
+  
+      
+      .piece {
+        padding: 4px;
+      }
+    }
+  }
+
+  .piece {
+    pointer-events: none;
   }
 }

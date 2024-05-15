@@ -13,6 +13,8 @@ body {
 
 * {
   box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 
 .container {
@@ -20,6 +22,10 @@ body {
   padding: 0 20px;
   margin: 0 auto;
   width: 100%;
+
+  @media (max-width: 767px) {
+    padding: 0 10px;
+  }
 }
 
 .wrapper {

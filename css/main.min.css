@@ -12,6 +12,8 @@ body {
 
 * {
   box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 
 .container {
@@ -19,6 +21,11 @@ body {
   padding: 0 20px;
   margin: 0 auto;
   width: 100%;
+}
+@media (max-width: 767px) {
+  .container {
+    padding: 0 10px;
+  }
 }
 
 .wrapper {
@@ -57,6 +64,7 @@ body {
   grid-template-rows: repeat(5, 1fr);
   background-color: rgba(40, 79, 136, 0.7490196078);
   border: 2px solid #31548e;
+  touch-action: none;
   margin-top: 40px;
   padding: 10px;
   display: grid;
@@ -67,6 +75,12 @@ body {
     gap: 4px;
   }
 }
+@media (max-width: 767px) {
+  #puzzle {
+    padding: 4px;
+    border: 0;
+  }
+}
 #puzzle .slot {
   background-color: rgba(255, 255, 255, 0.1);
   -webkit-user-select: none;
@@ -74,12 +88,23 @@ body {
           user-select: none;
   aspect-ratio: 1;
 }
+#puzzle .slot.hovering {
+  border: 2px solid white;
+}
+@media (max-width: 767px) {
+  #puzzle .slot .piece .inner {
+    gap: 2px;
+  }
+}
+#puzzle .slot .piece:hover {
+  z-index: 10;
+}
 #puzzle .slot .piece:hover .inner {
   padding: 10px;
 }
 @media (max-width: 767px) {
   #puzzle .slot .piece:hover .inner {
-    padding: 6px;
+    padding: 0;
   }
 }
 #puzzle .slot .piece:hover .outer {
@@ -92,6 +117,7 @@ body {
   background-color: rgba(46, 51, 57, 0.75);
   border: 2px solid #3c4046;
   margin-bottom: 40px;
+  touch-action: none;
   margin-top: 40px;
   padding: 10px;
   display: grid;
@@ -107,6 +133,9 @@ body {
   #pieces {
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(5, 1fr);
+    margin-bottom: 0;
+    padding: 0;
+    border: 0;
   }
 }
 #pieces .slot {
@@ -116,6 +145,9 @@ body {
           user-select: none;
   aspect-ratio: 1;
   padding: 4px;
+}
+#pieces .slot.hovering {
+  border: 2px solid white;
 }
 #pieces .piece .inner {
   gap: 4px;
@@ -147,8 +179,8 @@ body {
 }
 @media (max-width: 768px) {
   .piece.dummy {
-    height: 50px;
-    width: 50px;
+    height: 40px;
+    width: 40px;
   }
 }
 @media (min-width: 768px) {
@@ -249,6 +281,15 @@ body {
   background-color: #fff1df;
 }
 
-body.dragging #puzzle > .slot:hover {
-  background-color: rgba(255, 255, 255, 0.2) !important;
+@media (min-width: 768px) {
+  body.dragging slot:hover {
+    background-color: rgba(255, 255, 255, 0.3) !important;
+    border: 2px solid white;
+  }
+  body.dragging slot:hover .piece {
+    padding: 4px;
+  }
+}
+body.dragging .piece {
+  pointer-events: none;
 }/*# sourceMappingURL=main.min.css.map */
