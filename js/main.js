@@ -27,7 +27,7 @@ function pointerDown(e) {
 
   dummyPiece.style.position = 'fixed';
   dummyPiece.style.pointerEvents = 'none';
-  updateDummyPiecePosition(e.pageX, e.pageY);
+  updateDummyPiecePosition(e.clientX, e.clientY);
 }
 
 function mouseUp(e) {
@@ -64,7 +64,7 @@ function updateDummyPiecePosition(x, y) {
 // update the position of the dummy piece while dragging
 document.addEventListener('mousemove', e => {
   if (dummyPiece) {
-    updateDummyPiecePosition(e.pageX, e.pageY);
+    updateDummyPiecePosition(e.clientX, e.clientY);
   }
 });
 
