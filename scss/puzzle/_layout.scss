@@ -3,16 +3,12 @@
   grid-template-rows: repeat(5, 1fr);
   background-color: #284f88bf;
   border: 2px solid #31548e;
-  touch-action: none;
   margin-top: 40px;
   padding: 10px;
   display: grid;
   gap: 6px;
 
-  @media (max-width: 991px) {
-    gap: 4px;
-  }
-
+  @media (max-width: 991px) { gap: 4px }
   @media (max-width: 767px) {
     padding: 4px;
     border: 0;
@@ -20,32 +16,25 @@
 
   .slot {
     background-color: rgba(255, 255, 255, 0.1);
-    user-select: none;
     aspect-ratio: 1;
 
-    &.hovering {
-      border: 2px solid white;
-    }
+    &.hovering { border: 2px solid white }
 
     .piece {
-      @media (max-width: 767px) {
-        .inner {
-          gap: 2px;
-        }
+      &:hover {
+        .inner { padding: 10px }
+        .outer { opacity: 1 }
+        z-index: 10;
       }
 
-      &:hover {
-        z-index: 10;
-
-        .inner {
-          @media (max-width: 767px) {
-            padding: 0;
-          }
-
-          padding: 10px
+      @media (max-width: 767px) {
+        &:hover, &.selected {
+          .inner { padding: 0 }
+          .outer { opacity: 1 }
+          z-index: 10;
         }
 
-        .outer { opacity: 1 }
+        .inner { gap: 2px }
       }
     }
   }
@@ -57,7 +46,6 @@
   background-color: rgba(46, 51, 57, 0.75);
   border: 2px solid #3c4046;
   margin-bottom: 40px;
-  touch-action: none;
   margin-top: 40px;
   padding: 10px;
   display: grid;
@@ -78,22 +66,16 @@
 
   .slot {
     background-color: rgba(255, 255, 255, 0.1);
-    user-select: none;
     aspect-ratio: 1;
     padding: 4px;
 
-    &.hovering {
-      border: 2px solid white;
-    }
+    &.hovering { border: 2px solid white }
   }
 
   .piece {
     .inner {
+      @media (max-width: 991px) { gap: 2px }
       gap: 4px;
-
-      @media (max-width: 991px) {
-        gap: 2px;
-      }
     }
   }
 }
@@ -102,15 +84,12 @@
   transition: padding 0.2s;
   justify-content: center;
   align-items: center;
-  user-select: none;
   position: relative;
   aspect-ratio: 1;
   display: flex;
   cursor: grab;
 
-  &.dragging:not(.dummy) {
-    opacity: 0.5;
-  }
+  &.dragging:not(.dummy) { opacity: 0.5 }
 
   &.dummy {
     height: 100px;
@@ -138,26 +117,24 @@
     width: 100%;
     gap: 6px;
 
-    @media (max-width: 991px) {
-      gap: 4px;
-    }
+    @media (max-width: 991px) { gap: 4px }
   }
 
   .outer {
     transition: opacity 0.2s ease-in-out;
-    position: absolute;
-    display: flex;
     height: calc(100% - 8px);
     width: calc(100% - 8px);;
+    position: absolute;
+    display: flex;
     opacity: 0;
     left: 4px;
     top: 4px;
 
     @media (max-width: 767px) {
-      top: -10px;
-      left: -10px;
-      width: calc(100% + 20px);
       height: calc(100% + 20px);
+      width: calc(100% + 20px);
+      left: -10px;
+      top: -10px;
     }
 
     .top {
@@ -200,9 +177,7 @@
       display: flex;
       gap: 10px;
 
-      @media (max-width: 991px) {
-        gap: 4px;
-      }
+      @media (max-width: 991px) { gap: 4px; }
 
       .pixel {
         background-color: white;
@@ -216,16 +191,8 @@
     background-color: #061660;
     aspect-ratio: 1;
 
-    &.red {
-      background-color: #e64e79;
-    }
-
-    &.blue {
-      background-color: #56c8ff;
-    }
-
-    &.white {
-      background-color: #fff1df;
-    }
+    &.white { background-color: #fff1df }
+    &.blue { background-color: #56c8ff }
+    &.red { background-color: #e64e79 }
   }
 }
