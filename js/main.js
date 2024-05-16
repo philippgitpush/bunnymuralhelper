@@ -16,12 +16,7 @@ function pointerDown(e) {
   let y = e.clientY;
 
   draggedPiece = this;
-
-  // update visuals
-  createCursor(this.cloneNode(true), x, y);
   updateSelected(draggedPiece);
-  updateCursor(x, y);
-  updateDragging();
 }
 
 function pointerUp(e) {
@@ -42,8 +37,16 @@ function pointerUp(e) {
 
 function pointerMove(e) {
   if (!draggedPiece || !e.isPrimary) return;
-  updateCursor(e.clientX, e.clientY);
-  updateHovering(document.elementFromPoint(e.clientX, e.clientY).closest('.slot'));
+
+  let x = e.clientX;
+  let y = e.clientY;
+
+  if (!dummyPiece) createCursor(draggedPiece.cloneNode(true), x, y);
+
+  updateDragging();
+  updateCursor(x, y);
+  removeSelected();
+  updateHovering(document.elementFromPoint(x, y).closest('.slot'));
 }
 
 // place / swap behaviour
@@ -103,14 +106,20 @@ function removeHovering() {
   document.querySelectorAll('.hovering').forEach(function(e) { e.classList.remove('hovering') });
 }
 
+function removeSelected() {
+  document.querySelectorAll('.selected').forEach(function(e) { e.classList.remove('selected') });
+  document.body.classList.remove('dim-pieces');
+}
+
 function updateSelected(elem) {
-  if (elem.classList.contains('selected')) { // deselect if interacting with already selected piece
-    elem.classList.remove('selected');
+  if (elem.classList.contains('selected')) { // toggle if already selected piece
+    removeSelected();
     return;
   }
 
-  document.querySelectorAll('.selected').forEach(function(e) { e.classList.remove('selected') });
+  removeSelected();
   elem.classList.add('selected');
+  document.body.classList.add('dim-pieces');
 }
 
 // mobile fixes

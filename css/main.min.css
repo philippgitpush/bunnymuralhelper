@@ -70,17 +70,6 @@ body {
   display: grid;
   gap: 6px;
 }
-@media (max-width: 991px) {
-  #puzzle {
-    gap: 4px;
-  }
-}
-@media (max-width: 767px) {
-  #puzzle {
-    padding: 4px;
-    border: 0;
-  }
-}
 #puzzle .slot {
   background-color: rgba(255, 255, 255, 0.1);
   aspect-ratio: 1;
@@ -88,27 +77,36 @@ body {
 #puzzle .slot.hovering {
   border: 2px solid white;
 }
-#puzzle .slot .piece:hover {
-  z-index: 10;
-}
-#puzzle .slot .piece:hover .inner {
-  padding: 10px;
-}
-#puzzle .slot .piece:hover .outer {
-  opacity: 1;
-}
-@media (max-width: 767px) {
-  #puzzle .slot .piece:hover, #puzzle .slot .piece.selected {
+@media (min-width: 992px) {
+  #puzzle .slot .piece:hover {
     z-index: 10;
   }
-  #puzzle .slot .piece:hover .inner, #puzzle .slot .piece.selected .inner {
-    padding: 0;
+  #puzzle .slot .piece:hover .inner {
+    padding: 14px;
   }
-  #puzzle .slot .piece:hover .outer, #puzzle .slot .piece.selected .outer {
+  #puzzle .slot .piece:hover .outer {
     opacity: 1;
   }
-  #puzzle .slot .piece .inner {
-    gap: 2px;
+}
+@media (max-width: 991px) {
+  #puzzle .slot .piece.selected {
+    z-index: 10;
+  }
+  #puzzle .slot .piece.selected .outer {
+    opacity: 1;
+  }
+  #puzzle .slot .piece .outer {
+    height: calc(100% + 20px);
+    width: calc(100% + 20px);
+    left: -10px;
+    top: -10px;
+  }
+}
+@media (max-width: 991px) {
+  #puzzle {
+    padding: 4px;
+    border: 0;
+    gap: 4px;
   }
 }
 
@@ -123,41 +121,75 @@ body {
   display: grid;
   gap: 4px;
 }
-@media (max-width: 991px) {
-  #pieces {
-    grid-template-columns: repeat(13, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-  }
-}
-@media (max-width: 767px) {
-  #pieces {
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    margin-bottom: 0;
-    padding: 0;
-    border: 0;
-  }
-}
 #pieces .slot {
   background-color: rgba(255, 255, 255, 0.1);
   aspect-ratio: 1;
   padding: 4px;
 }
+@media (min-width: 768px) and (max-width: 991px) {
+  #pieces .slot {
+    padding: 4px;
+  }
+}
+@media (max-width: 767px) {
+  #pieces .slot {
+    padding: 2px;
+  }
+}
 #pieces .slot.hovering {
   border: 2px solid white;
 }
-#pieces .piece .inner {
+#pieces .slot .piece .inner {
   gap: 4px;
 }
+@media (max-width: 767px) {
+  #pieces .slot .piece .inner {
+    gap: 2px;
+  }
+}
+#pieces .slot .piece .outer {
+  height: calc(100% + 20px);
+  width: calc(100% + 20px);
+  left: -10px;
+  top: -10px;
+}
+@media (min-width: 992px) {
+  #pieces .slot .piece:hover {
+    z-index: 10;
+  }
+  #pieces .slot .piece:hover .outer {
+    opacity: 1;
+  }
+}
 @media (max-width: 991px) {
-  #pieces .piece .inner {
+  #pieces .slot .piece.selected {
+    z-index: 10;
+  }
+  #pieces .slot .piece.selected .outer {
+    opacity: 1;
+  }
+}
+@media (min-width: 992px) and (max-width: 991px) {
+  #pieces {
+    grid-template-columns: repeat(13, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+  }
+}
+@media (max-width: 991px) {
+  #pieces {
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    margin-bottom: 0;
+    padding: 4px;
+    border: 0;
     gap: 2px;
   }
 }
 
 .piece {
-  transition: padding 0.2s;
+  transition: opacity 0.2s ease-in-out, filter 0.2s ease-in-out, padding 0.2s ease-in-out;
   justify-content: center;
+  transition-delay: 0.1s;
   align-items: center;
   position: relative;
   aspect-ratio: 1;
@@ -168,19 +200,21 @@ body {
   opacity: 0.5;
 }
 .piece.dummy {
+  pointer-events: none;
+  position: fixed;
   height: 100px;
   width: 100px;
 }
-@media (max-width: 768px) {
+@media (min-width: 768px) and (max-width: 991px) {
+  .piece.dummy {
+    height: 60px;
+    width: 60px;
+  }
+}
+@media (max-width: 767px) {
   .piece.dummy {
     height: 40px;
     width: 40px;
-  }
-}
-@media (min-width: 768px) {
-  .piece:hover {
-    border: 2px solid white;
-    padding: 3px;
   }
 }
 .piece .inner {
@@ -192,9 +226,14 @@ body {
   width: 100%;
   gap: 6px;
 }
-@media (max-width: 991px) {
+@media (min-width: 768px) and (max-width: 991px) {
   .piece .inner {
     gap: 4px;
+  }
+}
+@media (max-width: 767px) {
+  .piece .inner {
+    gap: 2px;
   }
 }
 .piece .outer {
@@ -206,14 +245,6 @@ body {
   opacity: 0;
   left: 4px;
   top: 4px;
-}
-@media (max-width: 767px) {
-  .piece .outer {
-    height: calc(100% + 20px);
-    width: calc(100% + 20px);
-    left: -10px;
-    top: -10px;
-  }
 }
 .piece .outer .top {
   position: absolute;
@@ -249,17 +280,23 @@ body {
   justify-content: center;
   align-items: center;
   display: flex;
-  gap: 10px;
+  gap: 6px;
 }
-@media (max-width: 991px) {
+@media (max-width: 767px) {
   .piece .outer div {
-    gap: 4px;
+    gap: 3px;
   }
 }
 .piece .outer div .pixel {
   background-color: white;
   height: 5px;
   width: 5px;
+}
+@media (max-width: 767px) {
+  .piece .outer div .pixel {
+    height: 4px;
+    width: 4px;
+  }
 }
 .piece .pixel {
   background-color: #061660;
@@ -279,6 +316,7 @@ body.dragging .piece {
   pointer-events: none;
 }
 @media (min-width: 768px) {
+  body.dragging { /* desktop slot hover effect */ }
   body.dragging slot:hover {
     background-color: rgba(255, 255, 255, 0.3) !important;
     border: 2px solid white;
@@ -287,15 +325,23 @@ body.dragging .piece {
     padding: 4px;
   }
 }
-
-.piece.dummy {
-  pointer-events: none;
-  position: fixed;
-}
-
-#puzzle, #pieces, #puzzle *, #pieces *, .dummy {
+body #puzzle, body #pieces, body #puzzle *, body #pieces *, body .dummy { /* mobile avoid unwanted touch actions */
   touch-action: none;
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
+}
+body:not(.dragging) { /* desktop pieces hover dim effect */ }
+@media (min-width: 992px) {
+  body:not(.dragging) #pieces:hover .piece:not(:hover) {
+    filter: saturate(0.5);
+    opacity: 0.5;
+  }
+}
+@media (max-width: 991px) {
+  body { /* mobile pieces dim effect */ }
+  body.dim-pieces .piece:not(.selected) {
+    filter: saturate(0.5);
+    opacity: 0.5;
+  }
 }/*# sourceMappingURL=main.min.css.map */

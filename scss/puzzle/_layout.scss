@@ -8,35 +8,41 @@
   display: grid;
   gap: 6px;
 
-  @media (max-width: 991px) { gap: 4px }
-  @media (max-width: 767px) {
-    padding: 4px;
-    border: 0;
-  }
-
   .slot {
     background-color: rgba(255, 255, 255, 0.1);
     aspect-ratio: 1;
 
     &.hovering { border: 2px solid white }
 
+    
     .piece {
-      &:hover {
-        .inner { padding: 10px }
-        .outer { opacity: 1 }
-        z-index: 10;
+      @media (min-width: 992px) {
+        &:hover {
+          .inner { padding: 14px }
+          .outer { opacity: 1 }
+          z-index: 10;
+        }
       }
-
-      @media (max-width: 767px) {
-        &:hover, &.selected {
-          .inner { padding: 0 }
+      @media (max-width: 991px) {
+        &.selected {
           .outer { opacity: 1 }
           z-index: 10;
         }
 
-        .inner { gap: 2px }
+        .outer {
+          height: calc(100% + 20px);
+          width: calc(100% + 20px);
+          left: -10px;
+          top: -10px;
+        }
       }
     }
+  }
+
+  @media (max-width: 991px) {
+    padding: 4px;
+    border: 0;
+    gap: 4px
   }
 }
 
@@ -51,38 +57,71 @@
   display: grid;
   gap: 4px;
 
-  @media (max-width: 991px) {
-    grid-template-columns: repeat(13, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-  }
-
-  @media (max-width: 767px) {
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    margin-bottom: 0;
-    padding: 0;
-    border: 0;
-  }
-
   .slot {
     background-color: rgba(255, 255, 255, 0.1);
     aspect-ratio: 1;
     padding: 4px;
+    
+    @media (min-width: 768px) and (max-width: 991px) {
+      padding: 4px;
+    }
+
+    @media (max-width: 767px) {
+      padding: 2px;
+    }
 
     &.hovering { border: 2px solid white }
+
+    .piece {
+      .inner {
+        gap: 4px;
+
+        @media (max-width: 767px) {
+          gap: 2px;
+        }
+      }
+
+      .outer {
+        height: calc(100% + 20px);
+        width: calc(100% + 20px);
+        left: -10px;
+        top: -10px;
+      }
+
+      @media (min-width: 992px) {
+        &:hover {
+          .outer { opacity: 1 }
+          z-index: 10;
+        }
+      }
+      @media (max-width: 991px) {
+        &.selected {
+          .outer { opacity: 1 }
+          z-index: 10;
+        }
+      }
+    }
   }
 
-  .piece {
-    .inner {
-      @media (max-width: 991px) { gap: 2px }
-      gap: 4px;
-    }
+  @media (min-width: 992px) and (max-width: 991px) {
+    grid-template-columns: repeat(13, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+  }
+
+  @media (max-width: 991px) {
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    margin-bottom: 0;
+    padding: 4px;
+    border: 0;
+    gap: 2px;
   }
 }
 
 .piece {
-  transition: padding 0.2s;
+  transition: opacity 0.2s ease-in-out, filter 0.2s ease-in-out, padding 0.2s ease-in-out;
   justify-content: center;
+  transition-delay: 0.1s;
   align-items: center;
   position: relative;
   aspect-ratio: 1;
@@ -92,19 +131,19 @@
   &.dragging:not(.dummy) { opacity: 0.5 }
 
   &.dummy {
+    pointer-events: none;
+    position: fixed;
     height: 100px;
     width: 100px;
 
-    @media (max-width: 768px) {
+    @media (min-width: 768px) and (max-width: 991px) {
+      height: 60px;
+      width: 60px;
+    }
+
+    @media (max-width: 767px) {
       height: 40px;
       width: 40px;
-    }
-  }
-
-  @media (min-width: 768px) {
-    &:hover {
-      border: 2px solid white;
-      padding: 3px;
     }
   }
   
@@ -117,25 +156,24 @@
     width: 100%;
     gap: 6px;
 
-    @media (max-width: 991px) { gap: 4px }
+    @media (min-width: 768px) and (max-width: 991px) {
+      gap: 4px;
+    }
+
+    @media (max-width: 767px) {
+      gap: 2px;
+    }
   }
 
   .outer {
     transition: opacity 0.2s ease-in-out;
     height: calc(100% - 8px);
-    width: calc(100% - 8px);;
+    width: calc(100% - 8px);
     position: absolute;
     display: flex;
     opacity: 0;
     left: 4px;
     top: 4px;
-
-    @media (max-width: 767px) {
-      height: calc(100% + 20px);
-      width: calc(100% + 20px);
-      left: -10px;
-      top: -10px;
-    }
 
     .top {
       position: absolute;
@@ -175,14 +213,21 @@
       justify-content: center;
       align-items: center;
       display: flex;
-      gap: 10px;
+      gap: 6px;
 
-      @media (max-width: 991px) { gap: 4px; }
+      @media (max-width: 767px) {
+        gap: 3px;
+      }
 
       .pixel {
         background-color: white;
         height: 5px;
         width: 5px;
+
+        @media (max-width: 767px) {
+          height: 4px;
+          width: 4px;
+        }
       }
     }
   }
