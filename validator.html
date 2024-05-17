@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/main.min.css">
+  <title>Animal Well: Bunny Mural Helper</title>
+
+  <meta property="og:site_name" content="Animal Well: Bunny Mural Helper">
+  <meta property="og:url" content="https://philippgitpush.github.io/bunnymuralhelper/">
+  <meta property="og:title" content="Animal Well: Bunny Mural Helper">
+  <meta property="og:description" content="The Bunny Mural Puzzle Helper is a little tool for solving the Bunny Mural puzzle in the game Animal Well made by Billy Basso.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://philippgitpush.github.io/bunnymuralhelper/assets/opengraph/ogimage.jpg">
+  
+  <meta name="twitter:description" content="The Bunny Mural Puzzle Helper is a little tool for solving the Bunny Mural puzzle in the game Animal Well made by Billy Basso.">
+  <meta name="twitter:title" content="Animal Well: Bunny Mural Helper">
+  <meta name="twitter:image" content="https://philippgitpush.github.io/bunnymuralhelper/assets/opengraph/ogimage.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:creator" content="philippgitpush">
+  <meta name="twitter:site" content="philippgitpush">
+
+  <title><?= $page->_meta_title ?></title>
+  <meta name="description" content="The Bunny Mural Puzzle Helper is a little tool for solving the Bunny Mural puzzle in the game Animal Well made by Billy Basso.">
+  <meta name="author" content="philippgitpush">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+  <link rel="manifest" href="assets/favicon/site.webmanifest">
+  <link rel="mask-icon" href="assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
+  <link rel="shortcut icon" href="assets/favicon/favicon.ico">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-config" content="assets/favicon/browserconfig.xml">
+  <meta name="theme-color" content="#ffffff">
+</head>
+<body>
+  <style>
+    .validator {
+      background-color: rgba(40, 79, 136, 0.7490196078);
+      border: 2px solid #31548e;
+      color: #fff;
+      padding: 10px;
+    }
+  </style>
+  <canvas id="fireflies"></canvas>
+  <div class="wrapper">
+    <div class="content" style="flex-direction: column;min-width: fit-content;">
+      <div class="validator">
+        <span>Please refresh the page to reset everything!</span><br/>
+        <input id="inpFile" type="file"/><br/>
+        <span>After selecting your image file, click on the top left pixel of the mural.</span><br/>
+        <canvas id="canvasImg" width="0" height="0" style="image-rendering:pixelated;min-width: 80vw;"></canvas>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="container">
+        <div class="row">
+          <a href="https://github.com/philippgitpush/bunnymuralhelper" target="_blank">philippgitpush/bunnymuralhelper</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script defer src="https://umami.prozmann.de/script.js" data-website-id="9dc755c4-44dc-49f9-b448-c3647993e79a"></script>
+  <script src='js/main.js' defer></script>
+  <script src='js/fireflies.js'></script>
+  <script>
+    const bunnyColors = { yellow: "#fff0de", blue: "#55c6ff", black: "#020c51", red: "#e84e79" };
+    const bunnyColorHex = Object.values(bunnyColors);
+
+    const canvasImg = document.getElementById('canvasImg');
+    const canvasCtx = canvasImg.getContext('2d');
+    canvasCtx.willReadFrequently = true;
+    canvasCtx.imageSmoothingEnabled = false;
+    canvasImg.addEventListener('click', function(e) {
+      checkBunny(e);
+    });
+
+    let canvasData;
+    document.getElementById('inpFile').addEventListener('change', function() {
+      const file = this.files[0];
+      const reader = new FileReader();
+      reader.onload = function() {
+        const img = new Image();
+        img.src = reader.result;
+        img.onload = function() {
+          canvasImg.width = img.width;
+          canvasImg.height = img.height;
+          const ctx = canvasImg.getContext('2d');
+          ctx.clearRect(0, 0, canvasImg.width, canvasImg.height);
+          ctx.drawImage(img, 0, 0);
+          canvasData = ctx.getImageData(0, 0, canvasImg.width, canvasImg.height);
+        }
+      }
+      reader.readAsDataURL(file);
+    });
+
+
+    const muralCanvas = document.createElement('canvas');
+    const muralCtx = muralCanvas.getContext('2d');
+    muralCtx.willReadFrequently = true;
+    {
+      const muralImg = new Image();
+      muralImg.src = 'assets/mural.png';
+      
+      muralCanvas.width = 40;
+      muralCanvas.height = 20;
+      
+      muralImg.onload = function() {
+        muralCanvas.width = muralImg.width;
+        muralCanvas.height = muralImg.height;
+        const muralCtx = muralCanvas.getContext('2d');
+        muralCtx.drawImage(muralImg, 0, 0);
+      }
+    }
+    
+    function checkBunny(e) {
+      canvasCtx.putImageData(canvasData, 0, 0);
+      const bounds = canvasImg.getBoundingClientRect();
+      let x = e.clientX - bounds.left;
+      let y = e.clientY - bounds.top;
+
+      // Get the dimensions of the canvas
+      const canvasWidth = bounds.right - bounds.left;
+      const canvasHeight = bounds.bottom - bounds.top;
+
+      // Get the actual dimensions of the image
+      const imageWidth = canvasImg.width;
+      const imageHeight = canvasImg.height;
+
+      // Calculate the scale factors
+      const scaleX = imageWidth / canvasWidth;
+      const scaleY = imageHeight / canvasHeight;
+
+      // Translate canvas coordinates to image coordinates
+      x = Math.floor(x * scaleX);
+      y = Math.floor(y * scaleY);
+
+      const toHex = (rgb) => "#" + ((1 << 24) | (rgb[0] << 16) | (rgb[1] << 8) | rgb[2]).toString(16).toLowerCase().slice(1);
+      const getPixel = (x, y) => toHex(canvasCtx.getImageData(x, y, 1, 1).data);
+
+      let hex = getPixel(x, y);
+      let closestColor = findClosestColor(hex);
+      if (closestColor !== bunnyColors.yellow) {
+        alert("The top left pixel is not yellow! Please make sure the top left pixel is yellow before validating.");
+        return;
+      }
+
+      // Find edge
+      do {
+        x--;
+        hex = getPixel(x, y);
+        closestColor = findClosestColor(hex);
+      } while (closestColor === bunnyColors.yellow)
+      x++;
+      do {
+        y--;
+        hex = getPixel(x, y);
+        closestColor = findClosestColor(hex);
+      } while (closestColor === bunnyColors.yellow);
+      y++;
+
+      const [originX, originY] = [x, y];
+      console.log('Origin:', originX, originY);
+      do {
+        x++;
+        hex = getPixel(x, y);
+        closestColor = findClosestColor(hex);
+      } while (closestColor === bunnyColors.yellow);
+
+      const blockWidth = x - originX;
+      const pixelWidth = blockWidth / 3;
+      
+      let hasInvalid = false;
+      for (let bx = 0; bx < 40; bx++) {
+        for (let by = 0; by < 20; by++) {
+          const muralHex = toHex(muralCtx.getImageData(bx, by, 1, 1).data);
+          const canvasPixel = [originX + bx * (pixelWidth * 4), originY + by * (pixelWidth * 4)];
+          const canvasPixels = [
+            [canvasPixel[0], canvasPixel[1]],
+            [canvasPixel[0] + pixelWidth, canvasPixel[1]],
+            [canvasPixel[0], canvasPixel[1] + pixelWidth],
+            [canvasPixel[0] + pixelWidth, canvasPixel[1] + pixelWidth]
+          ];
+
+          const canvasColors = canvasPixels.map(p => findClosestColor(toHex(canvasCtx.getImageData(...p, 1, 1).data)));
+          const canvasColorCount = canvasColors.reduce((acc, color) => { acc[color] = (acc[color] || 0) + 1; return acc; }, {});
+          const mostFrequentColor = Object.keys(canvasColorCount).reduce((a, b) => canvasColorCount[a] > canvasColorCount[b] ? a : b);
+          
+          if (mostFrequentColor !== muralHex) {
+            hasInvalid = true;            
+            console.log('Mismatch at', bx, by, mostFrequentColor, muralHex);
+
+            // Draw a red square around the mismatching block
+            canvasCtx.strokeStyle = 'red';
+            canvasCtx.lineWidth = 3;
+            canvasCtx.strokeRect(canvasPixel[0], canvasPixel[1], pixelWidth * 3, pixelWidth * 3);
+            
+            // Draw a new pixel on top of the mismatching block
+            canvasCtx.fillStyle = mostFrequentColor;
+            canvasCtx.fillRect(canvasPixel[0], canvasPixel[1], pixelWidth * 3, pixelWidth * 3);
+
+            // Draw a cross through the mismatching block
+            canvasCtx.beginPath();
+            canvasCtx.moveTo(canvasPixel[0], canvasPixel[1]);
+            canvasCtx.lineTo(canvasPixel[0] + pixelWidth * 3, canvasPixel[1] + pixelWidth * 3);
+            canvasCtx.moveTo(canvasPixel[0] + pixelWidth * 3, canvasPixel[1]);
+            canvasCtx.lineTo(canvasPixel[0], canvasPixel[1] + pixelWidth * 3);
+            canvasCtx.strokeStyle = muralHex;
+            canvasCtx.lineWidth = pixelWidth;
+            canvasCtx.stroke();
+          }
+        }
+      }
+
+      setTimeout(() => {
+        if (hasInvalid) {
+          alert('There are mismatches in the mural. Wrong pixels have been highlighted.');
+        } else {
+          alert('The mural is correct!');
+        }
+      });
+    }
+
+    function hexToRgb(hex) {
+      let fullHex = hex.length === 4 
+        ? `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}` 
+        : hex;
+
+      let bigint = parseInt(fullHex.slice(1), 16);
+      let r = (bigint >> 16) & 255;
+      let g = (bigint >> 8) & 255;
+      let b = bigint & 255;
+
+      return [r, g, b];
+    }
+
+    function colorDistance(color1, color2) {
+      let rDiff = color1[0] - color2[0];
+      let gDiff = color1[1] - color2[1];
+      let bDiff = color1[2] - color2[2];
+
+      return Math.sqrt(rDiff * rDiff + gDiff * gDiff + bDiff * bDiff);
+    }
+
+    function findClosestColor(targetHex) {      
+      let targetRgb = hexToRgb(targetHex);
+      let closestColor = bunnyColorHex[0];
+      let smallestDistance = colorDistance(targetRgb, hexToRgb(closestColor));
+
+      for (let i = 1; i < bunnyColorHex.length; i++) {
+        let currentColor = bunnyColorHex[i];
+        let currentDistance = colorDistance(targetRgb, hexToRgb(currentColor));
+
+        if (currentDistance < smallestDistance) {
+          closestColor = currentColor;
+          smallestDistance = currentDistance;
+        }
+      }
+
+      return closestColor;
+    }
+    </script>
+</body>
+</html>
