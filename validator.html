@@ -163,12 +163,12 @@
       const [originX, originY] = [x, y];
       console.log('Origin:', originX, originY);
       do {
-        x++;
+        y++;
         hex = getPixel(x, y);
         closestColor = findClosestColor(hex);
       } while (closestColor === bunnyColors.yellow);
 
-      const blockWidth = x - originX;
+      const blockWidth = y - originY;
       const pixelWidth = blockWidth / 3;
       
       let hasInvalid = false;
