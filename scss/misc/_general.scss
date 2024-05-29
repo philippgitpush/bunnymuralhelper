@@ -4,12 +4,16 @@ body, html {
 }
 
 body {
-  background-image: url('../assets/animal-well.webp');
+  background-image: url('../assets/images/animal-well.webp');
   background-color: black;
   background-size: cover;
 
   font-family: Tahoma, sans-serif;
   min-height: 100vh;
+
+  @media (min-width: 992px) {
+    background-position: center;
+  }
 }
 
 * {
@@ -23,6 +27,11 @@ body {
   padding: 0 20px;
   margin: 0 auto;
   width: 100%;
+
+  &.spacing {
+    margin-bottom: 50px;
+    margin-top: 50px;
+  }
 
   @media (max-width: 767px) { padding: 0 10px }
 }

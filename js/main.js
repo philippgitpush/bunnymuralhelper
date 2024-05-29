@@ -8,12 +8,10 @@ document.addEventListener('pointerup', pointerUp);
 let draggedPiece = null;
 let dummyPiece = null;
 let lastMove = null;
+let solved = false;
 
 function pointerDown(e) {
   if (draggedPiece) return; // return if already mids dragging a piece
-
-  let x = e.clientX;
-  let y = e.clientY;
 
   draggedPiece = this;
   updateSelected(draggedPiece);
@@ -27,12 +25,15 @@ function pointerUp(e) {
 
   // move or swap piece
   const hoveredSlot = document.elementFromPoint(x, y).closest('.slot');
-  if (hoveredSlot) hoveredSlot.children.length === 0 ? placePiece(hoveredSlot) : swapPiece(hoveredSlot);
+  if (!solved && hoveredSlot) hoveredSlot.children.length === 0 ? placePiece(hoveredSlot) : swapPiece(hoveredSlot);
   
   // cleanup
   removeCursor();
   removeHovering();
   removeDragging();
+  
+  // check if puzzle was solved
+  if (!solved && hoveredSlot) checkSolved(hoveredSlot);
 }
 
 function pointerMove(e) {
@@ -128,8 +129,9 @@ document.ondblclick = function(e) { e.preventDefault() } // disable safari doubl
 
 // sounds
 
-var sound_place = new Audio("assets/50.ogg");
-var sound_swap = new Audio("assets/62.ogg");
+var sound_place = new Audio("assets/sounds/50.ogg");
+var sound_swap = new Audio("assets/sounds/62.ogg");
+var sound_melody = new Audio("assets/sounds/134.ogg");
 
 function playSound(sound) {
   sound.currentTime = 0; // avoids sounds cutting out when playback didn't finish
@@ -198,3 +200,122 @@ document.addEventListener("DOMContentLoaded", function() {
     createPixels(leftContainer, leftCount);
   }
 });
+
+// solution check
+
+let solutionMap = {
+  "1": "22", "2": "42", "3": "12", "4": "24", "5": "49", "6": "7", "7": "31", "8": "29", "9": "3", "10": "43", "11": "18", "12": "23", "13": "26", "14": "39", "15": "8", "16": "14", "17": "36", "18": "13", "19": "44", "20": "6", "21": "17", "22": "25", "23": "35", "24": "15", "25": "28", "26": "37", "27": "38", "28": "16", "29": "33", "30": "5", "31": "20", "32": "27", "33": "9", "34": "30", "35": "50", "36": "2", "37": "10", "38": "45", "39": "32", "40": "46", "41": "48", "42": "4", "43": "40", "44": "41", "45": "19", "46": "21", "47": "11", "48": "1", "49": "34", "50": "47"
+};
+
+function checkSolved(last) {
+  let currentSolution = true;
+
+  // check if pieces match solution's positions
+  for (let slot in solutionMap) {  
+    const piece = solutionMap[slot];
+
+    let target = document.querySelector('.slot[data-id="' + slot + '"]');
+    if (!target.firstElementChild || target.firstElementChild.dataset.id != piece) currentSolution = false;
+  }
+
+  // play the ending sequence when puzzle is correct/solved
+  if (currentSolution) playEnding(parseInt(last.dataset.id));
+}
+
+function playEnding(slot) {
+  solved = true;
+  playSound(sound_melody);
+  clearEventsAndStyles();
+
+  // animated slot-grid highlight
+  let group = getNearbySlotsGroup(slot);
+  let highlightInterval = setInterval(function() {
+    setHighlighted(group);
+
+    // add next neighbours for the next interval, remove past slots & duplicates
+    group.forEach(function(e) {
+      group = group.filter(group => group !== e); // remove past
+      group = group.concat(filterAlreadyHighlighted(getNearbySlotsGroup(e))); // add next
+      group = group.filter((item, index) => group.indexOf(item) === index); // filter duplicates
+    });
+
+    // clear interval when finished
+    if (!group.length) clearInterval(highlightInterval);
+
+  }, 150);
+}
+
+function filterAlreadyHighlighted(slots) {
+  let arr = [];
+
+  if (slots.length) slots.forEach(function(e) {
+    const target = document.querySelector('.slot[data-id="' + e + '"]');
+    if (!target.classList.contains('highlight')) arr.push(e);
+  })
+
+  return arr;
+}
+
+function setHighlighted(slots) {
+  slots.forEach(function(e) {
+    const target = document.querySelector('.slot[data-id="' + e + '"]');
+    target.classList.add('highlight');
+  })
+}
+
+// tile mapping for animations
+
+function getNearbySlotsGroup(slot) {
+  let arr = Array.from({ length: 50 }, (_, i) => i + 1); // list all slots on the board
+  let group = [];
+
+  for (let i = 1; i < 6; i++) { // 5 rows
+
+    // split board into 5 rows
+    const sliced = arr.slice(i * 10 - 10, i * 10);
+
+    // declaration of possible neighbours
+    const above = slot - 10;
+    const right = slot + 1;
+    const below = slot + 10;
+    const left = slot - 1;
+
+    // check for left & right neighbour
+    if (sliced.includes(slot)) {
+      if (sliced.includes(left) && !group.includes(left)) group.push(left); // left
+      if (sliced.includes(right) && !group.includes(right)) group.push(right); // right
+    }
+
+    // check for neighbour above & below
+    if (arr.includes(above) && !group.includes(above)) group.push(above); // above
+    if (arr.includes(below) && !group.includes(below)) group.push(below); // below
+  }
+
+  return group;
+}
+
+function clearEventsAndStyles() {
+  //events
+  document.removeEventListener('pointermove', pointerMove);
+
+  // styles
+  pieces.forEach(function(e) { e.classList.remove('selected') });
+  document.getElementById('puzzle').classList.add('solved');
+  document.getElementById('pieces').classList.add('solved');
+  document.body.classList.remove('dim-pieces');
+}
+
+// debug
+
+function populateBoard(solved) {
+  for (let i = 0; i < pieces.length; i++) {
+    let slot = document.querySelector('.slot[data-id="' + (i + 1) + '"]');
+    draggedPiece = pieces[i];
+
+    if (solved) draggedPiece = document.querySelector('.piece[data-id="' + solutionMap[i + 1] + '"]');
+    
+    placePiece(slot);
+  }
+
+  draggedPiece = null;
+}

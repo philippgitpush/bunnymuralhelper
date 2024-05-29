@@ -4,11 +4,16 @@ body, html {
 }
 
 body {
-  background-image: url("../assets/animal-well.webp");
+  background-image: url("../assets/images/animal-well.webp");
   background-color: black;
   background-size: cover;
   font-family: Tahoma, sans-serif;
   min-height: 100vh;
+}
+@media (min-width: 992px) {
+  body {
+    background-position: center;
+  }
 }
 
 * {
@@ -22,6 +27,10 @@ body {
   padding: 0 20px;
   margin: 0 auto;
   width: 100%;
+}
+.container.spacing {
+  margin-bottom: 50px;
+  margin-top: 50px;
 }
 @media (max-width: 767px) {
   .container {
@@ -65,7 +74,7 @@ body {
   grid-template-rows: repeat(5, 1fr);
   background-color: rgba(40, 79, 136, 0.7490196078);
   border: 2px solid #31548e;
-  margin-top: 40px;
+  margin-bottom: 40px;
   padding: 10px;
   display: grid;
   gap: 6px;
@@ -76,6 +85,12 @@ body {
 }
 #puzzle .slot.hovering {
   border: 2px solid white;
+}
+#puzzle .slot.highlight {
+  background-color: rgba(255, 255, 255, 0);
+}
+#puzzle .slot.highlight > .piece {
+  animation: scaleDown 1s forwards ease-in-out;
 }
 @media (min-width: 992px) {
   #puzzle .slot .piece:hover {
@@ -109,17 +124,25 @@ body {
     gap: 4px;
   }
 }
+#puzzle.solved > .slot .piece {
+  cursor: unset !important;
+}
 
 #pieces {
+  background-color: rgba(46, 51, 57, 0.75);
   grid-template-columns: repeat(17, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  background-color: rgba(46, 51, 57, 0.75);
+  transition: opacity 2s ease-in-out, max-height 2s ease-in-out;
   border: 2px solid #3c4046;
-  margin-bottom: 40px;
-  margin-top: 40px;
+  max-height: 800px;
   padding: 10px;
   display: grid;
   gap: 4px;
+}
+#pieces.solved {
+  overflow: hidden !important;
+  max-height: 0 !important;
+  opacity: 0 !important;
 }
 #pieces .slot {
   background-color: rgba(255, 255, 255, 0.1);
@@ -187,7 +210,7 @@ body {
 }
 
 .piece {
-  transition: opacity 0.2s ease-in-out, filter 0.2s ease-in-out, padding 0.2s ease-in-out;
+  transition: opacity 0.2s ease-in-out, filter 0.2s ease-in-out, padding 0.2s ease-in-out, transform 1s ease-in-out;
   justify-content: center;
   transition-delay: 0.1s;
   align-items: center;
@@ -312,6 +335,17 @@ body {
   background-color: #e64e79;
 }
 
+@keyframes scaleDown {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 body.dragging .piece {
   pointer-events: none;
 }
