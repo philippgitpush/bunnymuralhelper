@@ -307,12 +307,12 @@ function clearEventsAndStyles() {
 
 // debug
 
-function populateBoard(solved) {
+function populateBoard(use_solution_map) {
   for (let i = 0; i < pieces.length; i++) {
     let slot = document.querySelector('.slot[data-id="' + (i + 1) + '"]');
     draggedPiece = pieces[i];
 
-    if (solved) draggedPiece = document.querySelector('.piece[data-id="' + solutionMap[i + 1] + '"]');
+    if (use_solution_map) draggedPiece = document.querySelector('.piece[data-id="' + solutionMap[i + 1] + '"]');
     
     placePiece(slot);
   }
