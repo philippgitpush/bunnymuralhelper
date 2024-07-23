@@ -243,6 +243,10 @@ function playEnding(slot) {
     if (!group.length) clearInterval(highlightInterval);
 
   }, 150);
+
+  // let umami know another user has solved the puzzle
+  try { umami.track('puzzle-solve', { time: Math.trunc(timeSpent / 60) + ' Minute(s)', });
+  } catch (error) { console.log('could not send umami puzzle solve event:', error) }
 }
 
 function filterAlreadyHighlighted(slots) {
@@ -304,6 +308,11 @@ function clearEventsAndStyles() {
   document.getElementById('pieces').classList.add('solved');
   document.body.classList.remove('dim-pieces');
 }
+
+// umami functions
+
+let timeSpent = 0;
+setInterval(() => { timeSpent++ }, 1000);
 
 // debug
 
