@@ -21,4 +21,6 @@ Special thanks to the community members of Animal Well for their contributions a
 
 Thanks to [@Silverfeelin](https://github.com/Silverfeelin) for suggesting a more robust way of dragging objects for better browser support!
 
+Thanks to [@istudyatuni](https://github.com/istudyatuni) for adding Position Storage / local-storage!
+
 Some assets such as images and sounds are subject to the copyright of [Billy Basso](https://twitter.com/billy_basso?lang=de).
